@@ -1,12 +1,21 @@
 // requires
-var express = require('express');
-var mongoose = require('mongoose');
+const express = require('express');
+const { dbConnection } = require('./database/config');
 var bodyParser = require('body-parser');
 
 
-// inicializar variables
+// inicializar variables - crear el servidor de express
 var app = express();
 
+
+
+// CORS
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*"); // update to match the domain you will make the request from
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE, OPTIONS");
+    next();
+});
 
 // body parser
 // parse application/x-www-form-urlencoded
@@ -25,14 +34,12 @@ var uploadRoutes = require('./routes/upload');
 var imagenesRoutes = require('./routes/imagenes');
 
 // conexion a la base de datos
-mongoose.connect('mongodb://localhost:27017/hospitalDB', { useNewUrlParser: true, useUnifiedTopology: true })
-
-.then(db => console.log('base de datos conectada'))
-    .catch(err => console.log('Errror!', err));
+dbConnection();
 
 
 
 // server index config
+
 //var serveIndex = require('serve-index');
 // app.use(express.static(__dirname + '/'))
 // app.use('/uploads', serveIndex(__dirname + '/uploads'));
